@@ -19,7 +19,8 @@ def _fixed_decoders():
     return _fixed
 
 
-def _read_dynamic_tables(br):
+def _read_dynamic_tables(br, info=None):
+    start = br.pos * 8 - br.bitcnt
     hlit = br.bits(5) + 257
     hdist = br.bits(5) + 1
     hclen = br.bits(4) + 4
@@ -55,6 +56,10 @@ def _read_dynamic_tables(br):
     lit_lengths, dist_lengths = lengths[:hlit], lengths[hlit:]
     if lit_lengths[END_OF_BLOCK] == 0:
         raise DeflateError("no end-of-block code")
+    if info is not None:
+        info.update(hlit=hlit, hdist=hdist, hclen=hclen,
+                    header_bits=br.pos * 8 - br.bitcnt - start,
+                    max_code_len=max(lit_lengths + dist_lengths))
     return HuffmanDecoder(lit_lengths), HuffmanDecoder(dist_lengths)
 
 
@@ -122,7 +127,7 @@ def inflate_reader(br, out=None, trace=None):
             lit_dec, dist_dec = _fixed_decoders()
             _inflate_huffman(br, out, lit_dec, dist_dec, info)
         elif btype == 2:
-            lit_dec, dist_dec = _read_dynamic_tables(br)
+            lit_dec, dist_dec = _read_dynamic_tables(br, info)
             _inflate_huffman(br, out, lit_dec, dist_dec, info)
         else:
             raise DeflateError("invalid block type 3")
