@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flate"
+version = "0.1.0"
+description = "DEFLATE, zlib and gzip in pure Python"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+flate = "flate.cli:main"
+
+[tool.setuptools]
+packages = ["flate"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
