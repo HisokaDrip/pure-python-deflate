@@ -127,8 +127,8 @@ def cmd_inspect(args):
         print("symbols: %d literals, %d matches (avg length %.1f), %.1f%% of output came from matches"
               % (lits, matches, match_bytes / max(1, matches), 100.0 * match_bytes / max(1, out_len)))
     ratio = len(data) / out_len if out_len else 0.0
-    print("%d -> %d bytes, %.2f bits/byte, ratio %.3f (%.1f%% of original)" % (
-        out_len, len(data), 8.0 * len(data) / max(1, out_len), ratio, 100.0 * ratio))
+    print("original %d bytes, compressed %d bytes: %.2f bits/byte, ratio %.3f" % (
+        out_len, len(data), 8.0 * len(data) / max(1, out_len), ratio))
 
 
 def build_parser():

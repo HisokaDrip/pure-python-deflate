@@ -47,10 +47,8 @@ def test_distance_too_far_back():
 def test_fixed_block_invalid_symbols():
     from flate.huffman import canonical_codes
     from flate.tables import FIXED_LIT_LENGTHS
-    lit = canonical_codes(FIXED_LIT_LENGTHS + [8, 8][:0])
     # symbol 286 lives in the fixed code but is never valid
-    lengths = FIXED_LIT_LENGTHS
-    codes = canonical_codes(lengths)
+    codes = canonical_codes(FIXED_LIT_LENGTHS)
     assert len(codes) == 288
     stream = bits((1, 1), (1, 2), (codes[286], 8))
     with pytest.raises(DeflateError, match="length symbol"):
